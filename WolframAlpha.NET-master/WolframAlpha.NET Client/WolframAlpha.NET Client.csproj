@@ -103,7 +103,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="firstPartPyhon.py" />
     <Content Include="images\a1.jpg" />
     <Content Include="images\a10.jpg" />
     <Content Include="images\a11.jpg" />
@@ -128,7 +127,6 @@
     <Content Include="images\test7.jpg" />
     <Content Include="images\test8.jpg" />
     <Content Include="images\test9.jpg" />
-    <Content Include="pythonExample.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

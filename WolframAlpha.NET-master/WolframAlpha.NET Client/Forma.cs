@@ -27,7 +27,6 @@ namespace WolframAlphaNETClient
 
         public Forma()
         {
-            //pythonSource = System.IO.File.ReadAllText(@"..\..\firstPartPyhon.py");
             InitializeComponent();
         }
         public void browseButton_Click(object sender, EventArgs e)
@@ -41,7 +40,6 @@ namespace WolframAlphaNETClient
             {
                 pictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
                 pictureBox1.BackgroundImage = new Bitmap(dlg.FileName);
-                //pictureBox1.Image = new Bitmap(dlg.FileName);
                 pictureNameTb.Text = dlg.FileName;
                 fileName = dlg.FileName;
                 solveButton.Enabled = true;
@@ -58,25 +56,20 @@ namespace WolframAlphaNETClient
             wolfram.ScanTimeout = 0.1f; //We set ScanTimeout really low to get a quick answer. See RecalculateResults() below.
             wolfram.UseTLS = true; //Use encryption
 
-            //"x^3-2*x^2=14"
-            //We search for something. Notice that we spelled it wrong.
             QueryResult results = wolfram.Query(rez.pitanje);
 
-            //This fetches the pods that did not complete. It is only here to show how to use it.
             //This returns the pods, but also adds them to the original QueryResults.
             results.RecalculateResults();
 
             //Here we output the Wolfram|Alpha results.
             if (results.Error != null)
                 odgovor = "Woops, where was an error: " + results.Error.Message;
-            //Console.WriteLine(odgovor);
 
             if (results.DidYouMean.HasElements())
             {
                 foreach (DidYouMean didYouMean in results.DidYouMean)
                 {
                     odgovor = "Did you mean: " + didYouMean.Value;
-                    // Console.WriteLine(odgovor);
                 }
             }
 
@@ -85,16 +78,13 @@ namespace WolframAlphaNETClient
             {
                 if (!p.Title.Equals(""))
                     odgovor += p.Title + "\n";
-                //Console.WriteLine(p.Title);
                 if (p.SubPods.HasElements())
                 {
                     foreach (SubPod subPod in p.SubPods)
                     {
                         odgovor += subPod.Plaintext + "\n";
-                        // Console.WriteLine(subPod.Plaintext);
                     }
                 }
-                // Console.WriteLine("\n");
             }
 
 
@@ -103,17 +93,13 @@ namespace WolframAlphaNETClient
                 if (results.Warnings.Translation != null)
                 {
                     odgovor = "Translation: " + results.Warnings.Translation.Text;
-                    //Console.WriteLine("Translation: " + results.Warnings.Translation.Text);
                 }
                 if (results.Warnings.SpellCheck != null)
                 {
                     odgovor = "Spellcheck: " + results.Warnings.SpellCheck.Text;
-                    //Console.WriteLine("Spellcheck: " + results.Warnings.SpellCheck.Text);
                 }
             }
 
-            //Console.WriteLine("\nEND!");
-            //Console.ReadLine();
 
             NapraviResenje(odgovor);
 
@@ -122,6 +108,7 @@ namespace WolframAlphaNETClient
         private void solveButton_Click_1(object sender, EventArgs e)
         {
             label1.Text = "";
+            resenjertx.Text = "";
 
             try
             {
@@ -145,8 +132,8 @@ namespace WolframAlphaNETClient
 
                 if (myString != null)
                 {
-                    rez.pitanje = myString;
                     label1.Text = myString;
+                    rez.pitanje = myString;
                 }
             }
             catch (Exception ek)
@@ -158,6 +145,7 @@ namespace WolframAlphaNETClient
             Odradi();
 
             resenjertx.Text = rez.rezultat;
+            
         }
 
         public static void NapraviResenje(string odgovor)
