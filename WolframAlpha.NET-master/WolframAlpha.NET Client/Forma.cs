@@ -11,37 +11,41 @@ using WolframAlphaNET.Objects;
 using System.Configuration;
 using WolframAlphaNET;
 using WolframAlphaNET.Misc;
+using System.Diagnostics;
+using System.IO;
 
 namespace WolframAlphaNETClient
 {
     public partial class Forma : Form
     {
         private Object neuronskaMreza = new Object();
-        private static String pythonSource ;
+        private static String pythonSource;
         public static Rezultati rez = new Rezultati();
         public OpenFileDialog fbd = new OpenFileDialog();
         public static string _appId = ConfigurationManager.AppSettings["AppId"];
+        private String fileName;
 
         public Forma()
         {
-            pythonSource = System.IO.File.ReadAllText(@"C:\Users\Stefan\Desktop\WolframAlpha.NET-master\WolframAlpha.NET Client\pythonExample.py");
-             InitializeComponent();
+            //pythonSource = System.IO.File.ReadAllText(@"..\..\firstPartPyhon.py");
+            InitializeComponent();
         }
         public void browseButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            
-                dlg.Title = "Open Image";
-                dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
 
-                if (dlg.ShowDialog() == DialogResult.OK)
-                {
-                    pictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
-                    pictureBox1.BackgroundImage = new Bitmap(dlg.FileName);
-                    //pictureBox1.Image = new Bitmap(dlg.FileName);
-                    pictureNameTb.Text = dlg.FileName;
-                    solveButton.Enabled = true;
-                }
+            dlg.Title = "Open Image";
+            dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
+                pictureBox1.BackgroundImage = new Bitmap(dlg.FileName);
+                //pictureBox1.Image = new Bitmap(dlg.FileName);
+                pictureNameTb.Text = dlg.FileName;
+                fileName = dlg.FileName;
+                solveButton.Enabled = true;
+            }
         }
 
 
@@ -72,7 +76,7 @@ namespace WolframAlphaNETClient
                 foreach (DidYouMean didYouMean in results.DidYouMean)
                 {
                     odgovor = "Did you mean: " + didYouMean.Value;
-                   // Console.WriteLine(odgovor);
+                    // Console.WriteLine(odgovor);
                 }
             }
 
@@ -87,10 +91,10 @@ namespace WolframAlphaNETClient
                     foreach (SubPod subPod in p.SubPods)
                     {
                         odgovor += subPod.Plaintext + "\n";
-                       // Console.WriteLine(subPod.Plaintext);
+                        // Console.WriteLine(subPod.Plaintext);
                     }
                 }
-               // Console.WriteLine("\n");
+                // Console.WriteLine("\n");
             }
 
 
@@ -112,36 +116,51 @@ namespace WolframAlphaNETClient
             //Console.ReadLine();
 
             NapraviResenje(odgovor);
-            
+
         }
 
         private void solveButton_Click_1(object sender, EventArgs e)
         {
             label1.Text = "";
-            if (pitanjetxt.Text == "")
+
+            try
             {
-                rez.pitanje = "x^3-2*x^2=14";
+                string python = @"C:\Users\Bole\Anaconda2\python.exe";
+                string myPythonApp = @"..\..\python\read.py";
+                ProcessStartInfo myProcessStartInfo = new ProcessStartInfo(python);
+
+                myProcessStartInfo.UseShellExecute = false;
+                myProcessStartInfo.RedirectStandardOutput = true;
+                myProcessStartInfo.Arguments = myPythonApp + " " + fileName;
+
+                Process myProcess = new Process();
+                myProcess.StartInfo = myProcessStartInfo;
+                myProcess.Start();
+
+                StreamReader myStreamReader = myProcess.StandardOutput;
+                string myString = myStreamReader.ReadLine();
+
+                myProcess.WaitForExit();
+                myProcess.Close();
+
+                if (myString != null)
+                {
+                    rez.pitanje = myString;
+                    label1.Text = myString;
+                }
             }
-            else 
+            catch (Exception ek)
             {
-                rez.pitanje = pitanjetxt.Text;
+                Console.WriteLine(ek);
             }
 
-            var Source = pythonSource;
-            var engine = IronPython.Hosting.Python.CreateEngine();
-            var scope = engine.CreateScope();
-            engine.Execute(Source, scope);
-            // get function and dynamically invoke
-            var SolveEquation = scope.GetVariable("readEquation");
-            var solution = SolveEquation(neuronskaMreza); // returns 42 (Int32)
-            label1.Text = solution.ToString();
-            
+
             Odradi();
 
             resenjertx.Text = rez.rezultat;
         }
 
-        public static void NapraviResenje(string odgovor) 
+        public static void NapraviResenje(string odgovor)
         {
             odgovor = odgovor.Replace("Plot", "");
             odgovor = odgovor.Replace("Number line", "");
@@ -152,15 +171,7 @@ namespace WolframAlphaNETClient
         private void Forma_Load(object sender, EventArgs e)
         {
            
-            var kreirajMrezu = pythonSource;
-            var engine = IronPython.Hosting.Python.CreateEngine();
-            var scope = engine.CreateScope();
-            engine.Execute(kreirajMrezu, scope);
-
-            // get function and dynamically invoke
-            var CreateAnn = scope.GetVariable("createAnn");
-            neuronskaMreza = CreateAnn(); // returns 42 (Int32)
-            label1.Text = neuronskaMreza.ToString();
         }
+
     }
 }

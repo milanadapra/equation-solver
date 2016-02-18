@@ -56,9 +56,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IronPython, Version=2.7.5.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
     <Reference Include="RestSharp, Version=105.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
@@ -89,6 +87,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="python\my_model_architecture.json" />
+    <None Include="python\read.py" />
+    <None Include="python\snimljeno1.h5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WolframAlpha.NET\WolframAlpha.NET.csproj">
@@ -102,9 +103,31 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="firstPartPyhon.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="firstPartPyhon.py" />
+    <Content Include="images\a1.jpg" />
+    <Content Include="images\a10.jpg" />
+    <Content Include="images\a11.jpg" />
+    <Content Include="images\a12.jpg" />
+    <Content Include="images\a13.jpg" />
+    <Content Include="images\a14.jpg" />
+    <Content Include="images\a2.jpg" />
+    <Content Include="images\a3.jpg" />
+    <Content Include="images\a4.jpg" />
+    <Content Include="images\a5.jpg" />
+    <Content Include="images\a6.jpg" />
+    <Content Include="images\a7.jpg" />
+    <Content Include="images\a8.jpg" />
+    <Content Include="images\a9.jpg" />
+    <Content Include="images\r1.jpg" />
+    <Content Include="images\test1.jpg" />
+    <Content Include="images\test2.jpg" />
+    <Content Include="images\test3.jpg" />
+    <Content Include="images\test4.jpg" />
+    <Content Include="images\test5.jpg" />
+    <Content Include="images\test6.jpg" />
+    <Content Include="images\test7.jpg" />
+    <Content Include="images\test8.jpg" />
+    <Content Include="images\test9.jpg" />
     <Content Include="pythonExample.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

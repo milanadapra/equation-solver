@@ -1,9 +1,15 @@
-﻿import sys
+
+# coding: utf-8
+
+# In[1]:
+
+#import potrebnih biblioteka
+#get_ipython().magic(u'matplotlib inline')
+import sys
 sys.version
 sys.path.append("C:\\Users\\Bole\\Anaconda2\\Lib\\")
 sys.path.append("C:\\Users\\Bole\\Anaconda2")
 sys.path.append("C:\\Users\\Bole\\Anaconda2\\Lib\\site-packages\\")
-
 import cv2
 import collections
 import numpy as np
@@ -11,16 +17,22 @@ import scipy as sc
 import matplotlib.pyplot as plt
 from scipy.spatial import distance
 
-    # k-means
+# k-means
 from sklearn.cluster import KMeans
 
-    # keras
+# keras
 from keras.models import Sequential
 from keras.layers.core import Dense,Activation
 from keras.optimizers import SGD
 
 import matplotlib.pylab as pylab
 pylab.rcParams['figure.figsize'] = 16, 12 # za prikaz većih slika i plotova, zakomentarisati ako nije potrebno
+
+from keras.models import model_from_json
+
+
+
+# In[2]:
 
 #Funkcionalnost implementirana u V1
 def load_image(path):
@@ -70,7 +82,9 @@ def remove_noise(binary_image):
     return ret_val
 
 
+# In[3]:
 
+# TODO 2
 def merge_regions(contours):
     '''Funkcija koja vrši spajanje kukica i kvačica sa osnovnim karakterima
     Args:
@@ -100,7 +114,7 @@ def merge_regions(contours):
             
             
                 
-            if (min_y1-max_y2)<max(max_y1-min_y1,max_y2-min_y2)/2             and (min_x2>min_x1-5 and max_x2<max_x1+5):
+            if (min_y1-max_y2)<max(max_y1-min_y1,max_y2-min_y2)/2  and (min_x2>min_x1-5 and max_x2<max_x1+5):
                 #spajanje kontura
                 ret_val.append(np.concatenate((contour1,contour2)))
                 merged_index.append(i)
@@ -115,6 +129,8 @@ def merge_regions(contours):
     return ret_val
 
 
+
+# In[4]:
 
 def rotate_regions(contours,angles,centers,sizes):
     '''Funkcija koja vrši rotiranje regiona oko njihovih centralnih tačaka
@@ -156,6 +172,9 @@ def rotate_regions(contours,angles,centers,sizes):
 
 
 
+# In[5]:
+
+# TODO 3
 def select_roi(image_orig, image_bin):
     
     img, contours_borders, hierarchy = cv2.findContours(image_bin.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -223,32 +242,7 @@ def select_roi(image_orig, image_bin):
     return image_orig, sorted_regions[:, 0], region_distances
 
 
-
-def create_ann():
-    
-    ann = Sequential()
-    # Postavljanje slojeva neurona mreže 'ann'
-    ann.add(Dense(input_dim=784, output_dim=128,init="glorot_uniform"))
-    ann.add(Activation("sigmoid"))
-    ann.add(Dense(input_dim=128, output_dim=16,init="glorot_uniform"))
-    ann.add(Activation("sigmoid"))
-    return ann
-    
-def train_ann(ann, X_train, y_train):
-    X_train = np.array(X_train, np.float32)
-    y_train = np.array(y_train, np.float32)
-   
-    # definisanje parametra algoritma za obucavanje
-    sgd = SGD(lr=0.01, momentum=0.9)
-    ann.compile(loss='mean_squared_error', optimizer=sgd)
-
-    # obucavanje neuronske mreze
-    ann.fit(X_train, y_train, nb_epoch=500, batch_size=1, verbose = 0, shuffle=False, show_accuracy = False) 
-      
-    return ann
-
-
-
+# In[10]:
 
 def display_result(outputs, alphabet, k_means):
     '''
@@ -265,35 +259,52 @@ def display_result(outputs, alphabet, k_means):
     # Odrediti indeks grupe koja odgovara rastojanju između reči, pomoću vrednosti iz k_means.cluster_centers_
     w_space_group = max(enumerate(k_means.cluster_centers_), key = lambda x: x[1])[0]
     result = alphabet[winner(outputs[0])]
+    if (result[0]=='x' and alphabet[1]!='+'
+               and alphabet[winner(outputs[1])]!='-' and alphabet[winner(outputs[1])]!='='
+               and alphabet[winner(outputs[1])]!=')' and alphabet[winner(outputs[1])]!='('
+               and alphabet[winner(outputs[1])]!='/'):
+                result += '^'
     for idx, output in enumerate(outputs[1:,:]):
         # Iterativno dodavati prepoznate elemente kao u vežbi 2, alphabet[winner(output)]
         # Dodati space karakter u slučaju da odgovarajuće rastojanje između dva slova odgovara razmaku između reči.
         # U ovu svrhu, koristiti atribut niz k_means.labels_ koji sadrži sortirana rastojanja između susednih slova.
-        if (k_means.labels_[idx] == w_space_group):
-            result += ' '
         result += alphabet[winner(output)]
+        if(idx < len(outputs)):
+            if (alphabet[winner(output)]=='x' and alphabet[winner(outputs[idx+2])]!='+'
+               and alphabet[winner(outputs[idx+2])]!='-' and alphabet[winner(outputs[idx+2])]!='='
+               and alphabet[winner(outputs[idx+2])]!=')' and alphabet[winner(outputs[idx+2])]!='('
+               and alphabet[winner(outputs[idx+2])]!='/'):
+                result += '^'
+    
+    
+    for idx in range(0, len(result)):
+        if(result[idx]=='s' and result[idx+2]=='n'):
+            result=result.replace(result[idx+1],'i',1)
+        if(result[idx]=='c' and result[idx+2]=='s'):
+            result=result.replace(result[idx+1],'o',1)
     return result
 
 
-img_train = load_image('../../images/train.jpg')
-img_train_bin = remove_noise(invert(image_bin_adaptive(image_gray(img_train))))
-    
-    
-selected_regions, letters, region_distances = select_roi(img_train.copy(), img_train_bin)
+# In[9]:
+x = (sys.argv[1])
+x=x.replace('\\','/')
+alphabet = ['0','1','2','3','4','5','6','7','8','9','(',')','+','-','/','x','=','c','s','n','t','g']
+ann2 = model_from_json(open('../../python/my_model_architecture.json').read())
+ann2.load_weights('../../python/snimljeno1.h5')
+image_test_original = load_image(x)
+image_test = invert((image_bin(image_gray(image_test_original))))
 
-image_test_original_obucavanje = load_image('../../images/train.jpg')
-image_test_obucavanje = invert(remove_noise(image_bin(image_gray(image_test_original_obucavanje))))
-
-
-selected_test_obucavanje, letters_obucavanje, region_distances_obucavanje = select_roi(image_test_original_obucavanje.copy(), image_test_obucavanje)
-region_distances_obucavanje = np.array(region_distances_obucavanje).reshape(len(region_distances_obucavanje), 1)
+selected_regions_test, letters_test, region_distances_test = select_roi(image_test_original.copy(), image_test)
+region_distances_test = np.array(region_distances_test).reshape(len(region_distances_test), 1)
 k_means_test = KMeans(n_clusters=1, max_iter=2000, tol=0.00001, n_init=10)
-k_means_test.fit(region_distances_obucavanje)
-inputs_obucavanje = prepare_for_ann(letters_obucavanje)
-alphabet = ['0','1','2','3','4','5','6','7','8','9','+','-','=','(',')','x']
-outputs_obucavanje = convert_output(alphabet)
-ann = create_ann()
-ann = train_ann(ann, inputs_obucavanje, outputs_obucavanje)
+k_means_test.fit(region_distances_test)
+inputs_test = prepare_for_ann(letters_test)
+results_test = ann2.predict(np.array(inputs_test, np.float32))
 
-#return ann    
-print 'noga'
+print display_result(results_test, alphabet, k_means_test)
+
+
+# In[ ]:
+
+
+

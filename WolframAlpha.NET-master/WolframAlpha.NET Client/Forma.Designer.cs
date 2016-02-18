@@ -43,7 +43,6 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.pitanjetxt = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -81,6 +80,7 @@
             // 
             // resenjertx
             // 
+            this.resenjertx.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.resenjertx.Location = new System.Drawing.Point(3, 3);
             this.resenjertx.Name = "resenjertx";
             this.resenjertx.ReadOnly = true;
@@ -109,10 +109,10 @@
             // resultLabel
             // 
             this.resultLabel.AutoSize = true;
-            this.resultLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.resultLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.resultLabel.Location = new System.Drawing.Point(781, 65);
             this.resultLabel.Name = "resultLabel";
-            this.resultLabel.Size = new System.Drawing.Size(54, 18);
+            this.resultLabel.Size = new System.Drawing.Size(59, 20);
             this.resultLabel.TabIndex = 27;
             this.resultLabel.Text = "Result:";
             // 
@@ -171,19 +171,13 @@
             this.menuStrip1.TabIndex = 21;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // pitanjetxt
-            // 
-            this.pitanjetxt.Location = new System.Drawing.Point(548, 61);
-            this.pitanjetxt.Name = "pitanjetxt";
-            this.pitanjetxt.Size = new System.Drawing.Size(177, 20);
-            this.pitanjetxt.TabIndex = 28;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(841, 68);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 13);
+            this.label1.Size = new System.Drawing.Size(0, 20);
             this.label1.TabIndex = 29;
             // 
             // Forma
@@ -192,7 +186,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 612);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.pitanjetxt);
             this.Controls.Add(this.pictureNameTb);
             this.Controls.Add(this.browseButton);
             this.Controls.Add(this.panel2);
@@ -201,7 +194,7 @@
             this.Controls.Add(this.solveButton);
             this.Controls.Add(this.menuStrip1);
             this.Name = "Forma";
-            this.Text = "Forma";
+            this.Text = "Equation solver";
             this.Load += new System.EventHandler(this.Forma_Load);
             this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -228,7 +221,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.TextBox pitanjetxt;
         private System.Windows.Forms.RichTextBox resenjertx;
         private System.Windows.Forms.Label label1;
     }
